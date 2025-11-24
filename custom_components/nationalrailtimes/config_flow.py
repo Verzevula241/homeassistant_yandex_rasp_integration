@@ -55,7 +55,6 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         try:
             self.data_config["api_key"] = user_input["api_key"]
             self.data_config["arrival"] = user_input["arrival"]
-            self.data_config["destination"] = user_input["destination"]
             self.data_config["time_offset"] = user_input["time_offset"]
             self.data_config["time_window"] = str(DEFAULT_TIME_WINDOW)
         except Exception:  # pylint: disable=broad-except
