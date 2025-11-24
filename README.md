@@ -1,7 +1,6 @@
 # National Rail Departure Times Integration Component by [@crismc](https://github.com/crismc)
 [![Open your Home Assistant instance and start setting up a new integration.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=nationalrailtimes)
 
-<a href="https://www.buymeacoffee.com/jedimeat" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/white_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
 
 [![hacs][hacs-badge]][hacs-url]
 [![release][release-badge]][release-url]

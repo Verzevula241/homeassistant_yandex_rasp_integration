@@ -7,7 +7,7 @@ DEFAULT_ICON = "mdi:train"
 DEFAULT_TIME_OFFSET = 0
 DEFAULT_TIME_WINDOW = 120
 
-NATIONAL_RAIL_URL = "https://lite.realtime.nationalrail.co.uk/OpenLDBWS/ldb9.asmx"
+NATIONAL_RAIL_URL = "https://api.rasp.yandex-net.ru/v3.0/search/"
 SOAP_ACTION_URL = (
     "http://thalesgroup.com/RTTI/2015-05-14/ldb/GetNextDeparturesWithDetails"
 )

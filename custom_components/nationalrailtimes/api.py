@@ -15,6 +15,7 @@ class Api:
         self.time_offset = 0
         self.time_window = 120
         self.station = station
+        self.destination = destination
         self.filters = [destination]
         self.data = ApiData()
 
@@ -39,13 +40,14 @@ class Api:
 
         return payload
 
-    def generate_data(self):
+    def generate_params(self):
         """Generate XML SOAP Envelope"""
         api_key = self.api_key
         station = self.station
         time_offset = self.time_offset
         time_window = self.time_window
         filters = self.generate_filter_list()
+        destanation = self.destination
 
         data = """<x:Envelope
             xmlns:x="http://schemas.xmlsoap.org/soap/envelope/"
@@ -70,7 +72,9 @@ class Api:
             api_key, station, filters, time_offset, time_window
         )
 
-        return data
+        params = {'format': 'json', 'from': station, 'to': destanation, "lang": "ru_RU", "transport_types": "suburban"}
+
+        return params
 
     async def api_request(self):
         """
@@ -78,21 +82,20 @@ class Api:
         If no request is running, generate SOAP Envelope and submit request to Darwin API.
         Otherwise, wait until the existing one is complete, and return that value.
         """
-        data = self.generate_data()
-        return await self.request(self.request_url, self.soap_action, data)
+        params = self.generate_params()
+        return await self.request(self.request_url, params)
 
-    async def fetch(self, session, url, soapaction, payload):
+    async def fetch(self, session, url, params):
         """Fetch data from the Darwin API"""
         try:
             with async_timeout.timeout(15):
                 async with session.post(
                     url,
                     headers={
-                        "Content-Type": "text/xml",
-                        "charset": "utf-8",
-                        "SOAPAction": soapaction,
+                        "Content-Type": "text/json",
+                        "Authorization": self.api_key
                     },
-                    data=payload,
+                    params=params,
                 ) as response:
                     result = await response.text()
                     if result:
@@ -102,7 +105,7 @@ class Api:
         except:
             pass
 
-    async def request(self, url, soapaction, data):
+    async def request(self, url, params):
         """Prepare core request"""
         async with aiohttp.ClientSession() as session:
-            return await self.fetch(session, url, soapaction, data)
+            return await self.fetch(session, url, params)
