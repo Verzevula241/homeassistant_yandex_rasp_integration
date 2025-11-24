@@ -1,17 +1,17 @@
 {
-  "domain": "nationalrailtimes",
+  "domain": "yandexrasp",
   "name": "Yandex Raspisanie",
   "config_flow": true,
-  "documentation": "https://www.home-assistant.io/integrations/nationalrailtimes",
+  "documentation": "https://www.home-assistant.io/integrations/yandexrasp",
   "requirements": ["xmltodict==0.13.0"],
   "ssdp": [],
   "zeroconf": [],
   "homekit": {},
   "dependencies": [],
   "codeowners": [
-    "@crismc"
+    "@Verzevula241"
   ],
   "iot_class": "cloud_polling",
   "version": "1.0.0",
-  "issue_tracker": "https://github.com/crismc/homeassistant_nationalrailtimes_integration/issues"
+  "issue_tracker": "https://github.com/Verzevula241/homeassistant_yandex_rasp_integration/issues"
 }
