@@ -158,11 +158,5 @@ class ApiData:
             
             data = self.get_data()
             if data:
-                return {
-                    "departure": datetime.fromisoformat(data["departure"]).strftime("%H:%M"),
-                    "departure_platform": data["departure_platform"],
-                    "arrival": datetime.fromisoformat(data["arrival"]).strftime("%H:%M"),
-                    "arrival_platform": data["arrival_platform"],
-                    "duration": diff_minutes(data["departure"],data["arrival"])
-                    }
+                return "None"
             return "None"
