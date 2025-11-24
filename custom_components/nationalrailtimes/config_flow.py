@@ -1,4 +1,4 @@
-"""Config flow for National Rail Departure Times integration."""
+"""Config flow for Yandex Raspisanie integration."""
 from __future__ import annotations
 
 import logging
@@ -33,7 +33,7 @@ STEP_DESTINATION_DATA_SCHEMA = vol.Schema(
 
 
 class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    """Handle a config flow for National Rail Departure Times."""
+    """Handle a config flow for Yandex Raspisanie."""
 
     VERSION = 1
 
@@ -55,6 +55,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         try:
             self.data_config["api_key"] = user_input["api_key"]
             self.data_config["arrival"] = user_input["arrival"]
+            self.data_config["destination"] = user_input["destination"]
             self.data_config["time_offset"] = user_input["time_offset"]
             self.data_config["time_window"] = str(DEFAULT_TIME_WINDOW)
         except Exception:  # pylint: disable=broad-except
@@ -88,5 +89,5 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 return await self.async_step_destination()
 
         return self.async_create_entry(
-            title="National Rail Departure Times", data=self.data_config
+            title="Yandex Raspisanie", data=self.data_config
         )

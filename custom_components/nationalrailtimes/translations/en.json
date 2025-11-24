@@ -10,7 +10,7 @@
         },
         "step": {
             "user": {
-                "description": "Enter the Darwin API key and station to watch",
+                "description": "Enter the Yandex API key and station to watch",
                 "title": "Local Station",
                 "data": {
                     "api_key": "API Key",
