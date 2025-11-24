@@ -7,7 +7,7 @@
   "ssdp": [],
   "zeroconf": [],
   "homekit": {},
-  "loggers": [“custom_components.yandexrasp”],
+  "loggers": ["custom_components.yandexrasp"],
   "dependencies": [],
   "codeowners": [
     "@Verzevula241"
