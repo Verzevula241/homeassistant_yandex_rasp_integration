@@ -1,6 +1,6 @@
 {
   "domain": "nationalrailtimes",
-  "name": "National Rail Departure Times",
+  "name": "Yandex Raspisanie",
   "config_flow": true,
   "documentation": "https://www.home-assistant.io/integrations/nationalrailtimes",
   "requirements": ["xmltodict==0.13.0"],

@@ -1,5 +1,6 @@
-"""Data handler for the response from the Darwin API"""
+"""Data handler for the response from the Yandex API"""
 from datetime import datetime, timedelta
+import json
 from dateutil import parser
 import xmltodict
 import re
@@ -24,53 +25,63 @@ def check_key(element, *keys):
 
 
 class ApiData:
-    """Data handler class for the response from the Darwin API"""
+    """Data handler class for the response from the Yandex API"""
 
-    def __init__(self):
+    def __init__(self, time_offset):
         self.raw_result = ""
         self._last_update = None
-        self._api_xml = []
+        self._api_json = []
         self._station_name = ""
+        self.time_offset = time_offset
         self._refresh_interval = 2
 
-    def populate(self, xml_data):
+    def populate(self, json_data):
         """Hydrate the data entity with the XML API response"""
-        self.raw_result = xml_data
-        self._api_xml = []
+        self.raw_result = json_data
+        self._api_json = []
         self._last_update = datetime.now()
-
-    # def is_data_stale(self):
-    #     """Check if the data hydration is stale and requires refreshing"""
-    #     if len(self.raw_result) > 0:
-    #         now = datetime.now()
-    #         stale_time = self._last_update + timedelta(minutes=self._refresh_interval)
-
-    #         if stale_time < now:
-    #             return False
-
-    #     return True
-
+    
     def get_data(self):
-        """Parse the XML raw data and convert into a usable dictionary"""
-        if self.raw_result:
-            if not self._api_xml:
-                formatted = re.sub(r"lt\d*\:", "", self.raw_result)
-                data = xmltodict.parse(formatted)
-                if data and check_key(
-                    data,
-                    "soap:Envelope",
-                    "soap:Body",
-                    "GetNextDeparturesWithDetailsResponse",
-                    "DeparturesBoard",
-                ):
-                    self._api_xml = data["soap:Envelope"]["soap:Body"][
-                        "GetNextDeparturesWithDetailsResponse"
-                    ]["DeparturesBoard"]
-            return self._api_xml
+        """Parse JSON raw data and return nearest future segment (stored in _api_xml)"""
+        if not self.raw_result:
+            return None
+
+        # Если уже был вычислен — вернуть кэш
+        if self._api_json:
+            return self._api_json
+
+        # Парсим JSON
+        try:
+            data = self.raw_result
+        except Exception as e:
+            return None
+
+        segments = data.get("segments", [])
+        if not segments:
+            return None
+
+
+        now = datetime.now().astimezone()
+        target_time = now + timedelta(minutes=self.time_offset)
+        target_iso = target_time.isoformat(timespec="seconds")
+
+        # future segments
+        future = [s for s in segments if s.get("departure", "") > target_iso]
+
+        if not future:
+            return None
+
+        # nearest
+        future.sort(key=lambda s: s["departure"])
+        nearest = future[0]
+
+        self._api_json = nearest
+
+        return self._api_json
 
     def is_empty(self):
         """Check if the entity is empty"""
-        return len(self._api_xml) == 0
+        return len(self._api_json) == 0
 
     def get_destination_data(self, station):
         """Get the destination data"""
@@ -110,39 +121,18 @@ class ApiData:
         if not self._station_name:
             data = self.get_data()
             if data:
-                name = data["locationName"]
+                name = data["from"]["title"]
                 if name:
                     self._station_name = name
 
         return self._station_name
 
-    def get_destination_name(self, crx):
+    def get_destination_name(self):
         """Get the name of the final destination station"""
-        data = self.get_destination_data(crx)
-        if data:
-            if check_key(data, "destination"):
-                return data["destination"]["location"]["locationName"]
-
-    def message(self):
-        """Check for any station messages, such as cancelations, lack of service etc"""
         data = self.get_data()
-
-        def sub_message(message):
-            message = re.sub(
-                r"this station", self.get_station_name() + " station", message
-            )
-            message = re.sub(
-                r"more details.*", "", message, flags=re.IGNORECASE
-            ).strip()
-            return message
-
-        if check_key(data, "nrccMessages"):
-            messages = data["nrccMessages"]
-            if check_key(messages, "message"):
-                if isinstance(messages["message"], list):
-                    return [sub_message(i) for i in messages["message"]]
-                else:
-                    return [sub_message(messages["message"])]
+        if data:
+            if check_key(data, "to"):
+                return data["to"]["title"]
 
     def get_last_update(self):
         """Get the time the data was populated"""
@@ -150,7 +140,7 @@ class ApiData:
 
     def get_state(self, crx):
         """Get the state of the data based on destination"""
-        data = self.get_service_details(crx)
+        data = self.get_data()
         if data:
-            return parser.parse(data["std"]).strftime("%H:%M")
+            return datetime.fromisoformat(data["arrival"]).strftime("%H:%M")
         return "None"

@@ -22,8 +22,7 @@ from .const import (
     DEFAULT_ICON,
     DEFAULT_NAME,
     DOMAIN,
-    NATIONAL_RAIL_URL,
-    SOAP_ACTION_URL,
+    RASP_YANDEX_URL,
     CONF_REFRESH_SECONDS,
 )
 
@@ -120,7 +119,7 @@ class NationalrailSensor(SensorEntity):
         self._state = None
 
         self.api = Api(
-            api_key, station, destination, NATIONAL_RAIL_URL, SOAP_ACTION_URL
+            api_key, station, destination, RASP_YANDEX_URL
         )
         self.api.set_config(CONF_TIME_OFFSET, time_offset)
         self.api.set_config(CONF_TIME_WINDOW, time_window)
@@ -185,16 +184,13 @@ class NationalrailSensor(SensorEntity):
         data = self.api.data
         attributes = {}
         attributes["last_refresh"] = data.get_last_update()
-
+        attributes["offset"] = self.time_offset
         if data.is_empty():
             return attributes
 
-        attributes["message"] = data.message()
         attributes["station_name"] = data.get_station_name()
-        attributes["destination_name"] = data.get_destination_name(self.destination)
-        attributes["service"] = data.get_service_details(self.destination)
-        attributes["calling_points"] = data.get_calling_points(self.destination)
-        attributes["offset"] = self.time_offset
+        attributes["destination_name"] = data.get_destination_name()
+        # attributes["service"] = data.get_service_details(self.destination)
 
         attributes["station_code"] = self.station
         if self.destination in STATIONS:
