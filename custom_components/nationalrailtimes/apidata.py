@@ -23,6 +23,16 @@ def check_key(element, *keys):
             return False
     return True
 
+def diff_minutes(iso_date1: str, iso_date2: str) -> int:
+    """
+    Возвращает разницу между двумя датами ISO 8601 в минутах.
+    """
+    dt1 = parser.isoparse(iso_date1)
+    dt2 = parser.isoparse(iso_date2)
+
+    diff = dt2 - dt1
+    return int(diff.total_seconds() // 60)
+
 
 class ApiData:
     """Data handler class for the response from the Yandex API"""
@@ -142,5 +152,17 @@ class ApiData:
         """Get the state of the data based on destination"""
         data = self.get_data()
         if data:
-            return datetime.fromisoformat(data["arrival"]).strftime("%H:%M")
+            return datetime.fromisoformat(data["departure"]).strftime("%H:%M")
         return "None"
+    def get_thread(self):
+            
+            data = self.get_data()
+            if data:
+                return {
+                    "departure": datetime.fromisoformat(data["departure"]).strftime("%H:%M"),
+                    "departure_platform": data["departure_platform"],
+                    "arrival": datetime.fromisoformat(data["arrival"]).strftime("%H:%M"),
+                    "arrival_platform": data["arrival_platform"],
+                    "duration": diff_minutes(data["departure"],data["arrival"])
+                    }
+            return "None"
