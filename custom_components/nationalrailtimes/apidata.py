@@ -156,7 +156,7 @@ class ApiData:
         return "None"
     def get_thread(self):
             
-            data = self.get_data()
-            if data:
-                return "None"
-            return "None"
+        data = self.get_data()
+        if data:
+             return "None"
+        return "None"
