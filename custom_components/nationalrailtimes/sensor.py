@@ -191,7 +191,6 @@ class NationalrailSensor(SensorEntity):
         attributes["station_name"] = data.get_station_name()
         attributes["thread_data"] = data.get_thread()
         attributes["destination_name"] = data.get_destination_name()
-        attributes["departure"]
         # attributes["service"] = data.get_service_details(self.destination)
 
         attributes["station_code"] = self.station
