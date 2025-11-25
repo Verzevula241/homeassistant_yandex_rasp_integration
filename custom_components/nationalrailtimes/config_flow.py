@@ -27,7 +27,6 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
 STEP_DESTINATION_DATA_SCHEMA = vol.Schema(
     {
         vol.Required("destination"): vol.In(STATIONS),
-        vol.Optional("add_another", default=False): cv.boolean,
     }
 )
 
