@@ -23,23 +23,12 @@ class Api:
         """Set config item, such as time_offset and time_window"""
         if key == "time_offset":
             self.time_offset = val
-            # self.data.set_offset(val)
+            self.data.set_offset(int(val))
             return True
 
         if key == "time_window":
             self.time_window = val
             return True
-
-    def generate_filter_list(self):
-        """Generate XML Destination Filters"""
-        stations = self.filters
-        payload = ""
-
-        for station in stations:
-            if station is not None:
-                payload += f"<ldb:crs>{station}</ldb:crs>\n"
-
-        return payload
 
     def generate_params(self):
         station = self.station
@@ -51,11 +40,6 @@ class Api:
         return params
 
     async def api_request(self):
-        """
-        To minimise multiple API calls, check if a request from another entity in this component is already in progress.
-        If no request is running, generate SOAP Envelope and submit request to Yandex API.
-        Otherwise, wait until the existing one is complete, and return that value.
-        """
         params = self.generate_params()
         return await self.request(self.request_url, params)
 

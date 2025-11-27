@@ -41,6 +41,7 @@ class ApiData:
         self.raw_result = ""
         self._last_update = None
         self._api_json = []
+        self.next = []
         self._station_name = ""
         self.time_offset = 0
         self._refresh_interval = 2
@@ -87,6 +88,9 @@ class ApiData:
         # nearest
         future.sort(key=lambda s: s["departure"])
         nearest = future[0]
+        next = future[1]
+        if next:
+            nearest["next"] = next
 
         self._api_json = nearest
 
