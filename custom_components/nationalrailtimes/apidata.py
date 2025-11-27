@@ -166,6 +166,7 @@ class ApiData:
                 "departure_platform": data["departure_platform"],
                 "arrival": datetime.fromisoformat(data["arrival"]).strftime("%H:%M"),
                 "arrival_platform": data["arrival_platform"],
+                "stops": data["stops"],
                 "duration": diff_minutes(data["departure"],data["arrival"])
                 }
         return "None"
