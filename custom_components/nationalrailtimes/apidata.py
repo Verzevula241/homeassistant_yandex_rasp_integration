@@ -37,12 +37,12 @@ def diff_minutes(iso_date1: str, iso_date2: str) -> int:
 class ApiData:
     """Data handler class for the response from the Yandex API"""
 
-    def __init__(self, time_offset):
+    def __init__(self):
         self.raw_result = ""
         self._last_update = None
         self._api_json = []
         self._station_name = ""
-        self.time_offset = time_offset
+        self.time_offset = 0
         self._refresh_interval = 2
 
     def populate(self, json_data):
@@ -50,6 +50,9 @@ class ApiData:
         self.raw_result = json_data
         self._api_json = []
         self._last_update = datetime.now()
+        
+    def set_offset(self,offset):
+        self.time_offset = offset
     
     def get_data(self):
         """Parse JSON raw data and return nearest future segment (stored in _api_xml)"""

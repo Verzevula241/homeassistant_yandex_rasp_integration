@@ -17,12 +17,13 @@ class Api:
         self.station = station
         self.destination = destination
         self.filters = [destination]
-        self.data = ApiData(self.time_offset)
+        self.data = ApiData()
 
     def set_config(self, key, val):
         """Set config item, such as time_offset and time_window"""
         if key == "time_offset":
             self.time_offset = val
+            self.data.set_offset(val)
             return True
 
         if key == "time_window":

@@ -189,7 +189,7 @@ class NationalrailSensor(SensorEntity):
             return attributes
 
         attributes["station_name"] = data.get_station_name()
-        thred = data.get_thread()
+        attributes["thread"] = data.get_thread()
         attributes["destination_name"] = data.get_destination_name()
         # attributes["service"] = data.get_service_details(self.destination)
 
@@ -197,10 +197,5 @@ class NationalrailSensor(SensorEntity):
         if self.destination in STATIONS:
             attributes["target_station_name"] = STATIONS[self.destination]
             attributes["target_station_code"] = self.destination
-            
-        merged = {
-            **attributes,
-            **thred
-        }
 
-        return merged
+        return attributes
