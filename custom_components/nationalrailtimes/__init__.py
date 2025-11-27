@@ -1,11 +1,13 @@
 """Yandex Raspisanie integration."""
 from __future__ import annotations
+from datetime import timedelta
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 
 from .const import DOMAIN
+SCAN_INTERVAL = timedelta(minutes=2)
 
 # TODO List the platforms that you want to support.
 # For your initial PR, limit it to 1 platform.
